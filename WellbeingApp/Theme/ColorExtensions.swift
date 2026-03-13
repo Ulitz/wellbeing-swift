@@ -1,0 +1,21 @@
+import SwiftUI
+
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let r = Double((int >> 16) & 0xFF) / 255.0
+        let g = Double((int >> 8) & 0xFF) / 255.0
+        let b = Double(int & 0xFF) / 255.0
+        self.init(red: r, green: g, blue: b)
+    }
+
+    static func adaptive(light: String, dark: String) -> Color {
+        Color(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor(Color(hex: dark))
+                : UIColor(Color(hex: light))
+        })
+    }
+}
